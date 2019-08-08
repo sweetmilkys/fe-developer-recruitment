@@ -1,7 +1,8 @@
 import React from "react";
+import Main from "../Routes/Main";
 
 const App: React.FC = () => {
-  return <div className="App">wanted</div>;
+  return <Main />;
 };
 
 export default App;
