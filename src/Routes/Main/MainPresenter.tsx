@@ -27,6 +27,10 @@ const H3Text = styled.h3``;
 
 const CompanyContainer = styled.div``;
 
+const CompanyHeader = styled.div``;
+
+const CompanyFooter = styled.div``;
+
 const List = styled.ul``;
 
 interface IProps {
@@ -89,6 +93,54 @@ const MainContainer: React.FC<IProps> = ({
     </FilterBox>
     <Modal />
     <H3Text>적극 채용중인 회사</H3Text>
+    <CompanyContainer>
+      <ul>
+        {[
+          {
+            name: "원티드랩",
+            position: 11,
+            url: "company/79"
+          },
+          {
+            name: "클래스101",
+            position: 8,
+            url: "company/3257"
+          },
+          {
+            name: "29CM(에이플러스비)",
+            position: 8,
+            url: "company/1719"
+          },
+          {
+            name: "아프리카TV",
+            position: 9,
+            url: "company/5936"
+          },
+          {
+            name: "이지비랩",
+            position: 5,
+            url: "company/6047"
+          }
+        ].map(company => (
+          <a
+            key={company.name}
+            href={`https://www.wanted.co.kr/${company.url}`}
+            target="_blank"
+          >
+            <li>
+              <header>
+                <CompanyHeader />
+              </header>
+              <footer>
+                <CompanyFooter />
+                <h4>{company.name}</h4>
+                <h5>{`${company.position}개 포지션`}</h5>
+              </footer>
+            </li>
+          </a>
+        ))}
+      </ul>
+    </CompanyContainer>
     <CompanyContainer />
     <List>
       {[
