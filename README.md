@@ -11,6 +11,7 @@
 - react-router-dom
 - styled-components
 - styled-reset
+- axios
 
 ### 필수 구현사항
 
