@@ -27,9 +27,18 @@ const H3Text = styled.h3``;
 
 const CompanyContainer = styled.div``;
 
-const CompanyHeader = styled.div``;
+interface IImgProps {
+  bgImg?: string;
+  logo?: string;
+}
 
-const CompanyFooter = styled.div``;
+const CompanyImg = styled.div<IImgProps>`
+  background-image: url(${props => props.bgImg});
+`;
+
+const CompanyLogo = styled.div<IImgProps>`
+  background-image: url(${props => props.logo});
+`;
 
 const List = styled.ul``;
 
@@ -56,26 +65,20 @@ const MainContainer: React.FC<IProps> = ({
     <FilterBox>
       <FilterBtns>
         <WebFiltersBtns>
-          <Filter
-            selected={sort.selected}
-            display={[null, sort.display]}
-            filterOnClick={filterOnClick}
-          />
-          <Filter
-            selected={countries.selected}
-            display={["국가", countries.display]}
-            filterOnClick={filterOnClick}
-          />
-          <Filter
-            selected={locations.selected}
-            display={["지역", locations.display]}
-            filterOnClick={filterOnClick}
-          />
-          <Filter
-            selected={years.selected}
-            display={["경력", years.display]}
-            filterOnClick={filterOnClick}
-          />
+          {[
+            { category: null, val: sort },
+            { category: "국가", val: countries },
+            { category: "지역", val: locations },
+            { category: "경력", val: years }
+          ].map(({ category, val: { selected, display } }) => (
+            <Filter
+              key={display}
+              category={category}
+              display={display}
+              selected={selected}
+              filterOnClick={filterOnClick}
+            />
+          ))}
         </WebFiltersBtns>
         <MobileFilter>
           {"적용 중 필터:"}
@@ -98,43 +101,54 @@ const MainContainer: React.FC<IProps> = ({
         {[
           {
             name: "원티드랩",
+            url: "company/79",
             position: 11,
-            url: "company/79"
+            bgImg: "4qrmtohvtuusxbj6__1080_790.jpg",
+            logo: "0_4.f4c95760.png"
           },
           {
             name: "클래스101",
+            url: "company/3257",
             position: 8,
-            url: "company/3257"
+            bgImg: "qpja7torlddo7ymw__1080_790.jpg",
+            logo: "0_5.2d093183.jpg"
           },
           {
-            name: "29CM(에이플러스비)",
-            position: 8,
-            url: "company/1719"
+            name: "펫프렌즈",
+            url: "company/2756",
+            position: 3,
+            bgImg: "ishd31cajhqb4f8w__1080_790.jpg",
+            logo: "0_5.1df96eac.jpg"
           },
           {
             name: "아프리카TV",
+            url: "company/5936",
             position: 9,
-            url: "company/5936"
+            bgImg: "ftu1mpsatoohubhp__1080_790.jpg",
+            logo: "0_5.29e8d158.jpg"
           },
           {
-            name: "이지비랩",
-            position: 5,
-            url: "company/6047"
+            name: "넥슨코리아(NEXON)",
+            url: "company/886",
+            position: 36,
+            bgImg: "bx7zxeirqqeboq0q__1080_790.jpg",
+            logo: "0_5.4b4c1752.jpg"
           }
-        ].map(company => (
+        ].map(({ name, url, position, bgImg, logo }) => (
           <a
-            key={company.name}
-            href={`https://www.wanted.co.kr/${company.url}`}
+            key={name}
+            href={`https://www.wanted.co.kr/${url}`}
+            rel="noopener noreferrer"
             target="_blank"
           >
             <li>
               <header>
-                <CompanyHeader />
+                <CompanyImg bgImg={require(`../../images/${bgImg}`)} />
               </header>
               <footer>
-                <CompanyFooter />
-                <h4>{company.name}</h4>
-                <h5>{`${company.position}개 포지션`}</h5>
+                <CompanyLogo logo={require(`../../images/${logo}`)} />
+                <h4>{name}</h4>
+                <h5>{`${position}개 포지션`}</h5>
               </footer>
             </li>
           </a>

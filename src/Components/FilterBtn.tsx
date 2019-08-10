@@ -13,15 +13,17 @@ const FilterText = styled.span<ITextProps>`
 `;
 
 interface IProps {
+  category: string | null;
+  display: string;
   selected: boolean;
-  display: (string | null)[];
   filterOnClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const FilterBtn: React.FC<IProps> = React.memo(
-  ({ selected, display, filterOnClick }) => {
+  ({ category, display, selected, filterOnClick }) => {
     return (
       <Filter onClick={filterOnClick}>
+        {category !== null ? <FilterText>{category}</FilterText> : null}
         <FilterText isActive={selected}>{display}</FilterText>
       </Filter>
     );
