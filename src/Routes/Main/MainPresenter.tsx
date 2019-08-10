@@ -47,7 +47,27 @@ interface IProps {
   countries: { selected: boolean; display: string; key: string };
   locations: { selected: boolean; display: string; key: string };
   years: { selected: boolean; display: string; key: string };
-  jobs: Array<string>;
+  jobs: [
+    {
+      address: { country: string; location: string };
+      company: { id: number; name: string; industry_name: string };
+      compare_country: boolean;
+      due_time: string | null;
+      id: number;
+      is_bookmark: boolean;
+      is_like: boolean;
+      like_count: number;
+      logo_img: { origin: string; thumb: string };
+      position: string;
+      reward: {
+        formatted_total: string;
+        formatted_recommender: string;
+        formatted_recommendee: string;
+      };
+      status: string;
+      title_img: { origin: string; thumb: string };
+    }
+  ];
   filterCnt: number;
   filterOnClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
@@ -87,7 +107,7 @@ const MainContainer: React.FC<IProps> = ({
         <FilterBtnBox>
           <FilterBtn onClick={filterOnClick}>
             <FilterBtnIcon>
-              <i />
+              <i className="fas fa-filter" />
             </FilterBtnIcon>
             <FilterBtnText>필터</FilterBtnText>
           </FilterBtn>
@@ -157,30 +177,31 @@ const MainContainer: React.FC<IProps> = ({
     </CompanyContainer>
     <CompanyContainer />
     <List>
-      {[
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
-      ].map(item => (
-        <Poster key={item} />
-      ))}
+      {jobs.map(
+        ({
+          id,
+          like_count,
+          position,
+          company: { name },
+          address: { country, location },
+          reward: { formatted_total },
+          title_img: { thumb }
+        }) => {
+          return (
+            <Poster
+              key={id}
+              id={id}
+              likeCount={like_count}
+              position={position}
+              company={name}
+              country={country}
+              location={location}
+              reward={formatted_total}
+              bgUrl={thumb}
+            />
+          );
+        }
+      )}
     </List>
     <Messeage />
   </Container>

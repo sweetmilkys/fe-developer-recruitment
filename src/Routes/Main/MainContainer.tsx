@@ -41,10 +41,18 @@ const MainContainer: React.FC = () => {
     const getData = async () => {
       try {
         // api에서 데이터 가져오기
-        const { data: filtersData } = await axios.get("/api/v4/filters");
+        const { data: filtersData } = await axios.get("/api/v4/filters", {
+          headers: {
+            "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        });
         const {
           data: { data: jobsData, links }
-        } = await axios.get(url);
+        } = await axios.get(url, {
+          headers: {
+            "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        });
         setFilters(filtersData);
         setJobs(jobsData);
         links.current = links;

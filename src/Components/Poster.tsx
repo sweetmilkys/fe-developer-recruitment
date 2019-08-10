@@ -3,9 +3,66 @@ import styled from "styled-components";
 
 const Container = styled.li``;
 
+interface IImgProps {
+  bgUrl: string;
+}
+
+const Header = styled.header<IImgProps>`
+  background-image: url(${props => props.bgUrl});
+`;
+
+const LikeBtn = styled.button``;
+
+const Icon = styled.i`
+  color: hsla(0, 0%, 100%, 0.3);
+`;
+
+const Content = styled.div``;
+
+const AddressDot = styled.span``;
+
+const Reward = styled.div``;
+
+interface IProps {
+  id: number;
+  likeCount: number;
+  position: string;
+  company: string;
+  country: string;
+  location: string;
+  reward: string;
+  bgUrl: string;
+}
+
 // 채용 리스트
-const Poster = () => {
-  return <Container>Poster</Container>;
-};
+const Poster: React.FC<IProps> = React.memo(
+  ({ id, likeCount, position, company, country, location, reward, bgUrl }) => {
+    return (
+      <Container>
+        <a href={`https://www.wanted.co.kr/wd/${id}`}>
+          <Header bgUrl={bgUrl}>
+            <LikeBtn>
+              <Icon className="fas fa-heart" />
+              {likeCount}
+            </LikeBtn>
+          </Header>
+          <Content>
+            <dl>
+              <dt>{position}</dt>
+              <dd>
+                {company}
+                <br />
+                <span>{country}</span>
+                <AddressDot>.</AddressDot>
+                <span>{location}</span>
+              </dd>
+            </dl>
+            <Reward>{`채용보상금 ${reward}`}</Reward>
+          </Content>
+        </a>
+      </Container>
+    );
+  }
+);
 
 export default Poster;
