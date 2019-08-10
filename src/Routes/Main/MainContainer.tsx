@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import MainPresenter from "./MainPresenter";
 import axios from "axios";
+import Loader from "../../Components/Loader";
 
 const MainContainer: React.FC = () => {
+  const [loading, setLodaing] = useState(true);
   const [filters, setFilters] = useState();
   const [sort, setSort] = useState({
     selected: true,
@@ -48,13 +50,16 @@ const MainContainer: React.FC = () => {
         console.log(error);
         // 에러세팅
       } finally {
-        // 데이터세팅
+        // 로딩화면에서 전환
+        setLodaing(false);
       }
     };
     getData();
   }, [url]);
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <MainPresenter
       sort={sort}
       countries={countries}
