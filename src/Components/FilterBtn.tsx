@@ -9,7 +9,7 @@ interface ITextProps {
 
 const FilterText = styled.span<ITextProps>`
   font-weight: 600;
-  color: ${props => (props.isActive ? "#2886fa" : "#333")};
+  color: ${props => (props.isActive ? props.theme.mainColor : "#333")};
 `;
 
 interface IProps {
