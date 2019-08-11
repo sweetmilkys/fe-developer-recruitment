@@ -414,6 +414,19 @@ const List = styled.ul`
 `;
 
 interface IProps {
+  filters: {
+    job_sort: [{ selected: boolean; display: string; key: string }];
+    employee_count: string[];
+    countries: [
+      {
+        selected: boolean;
+        display: string;
+        key: string;
+        locations: [{ selected: boolean; display: string; key: string }];
+      }
+    ];
+    years: [{ selected: boolean; display: string; key: string }];
+  } | null;
   sort: { selected: boolean; display: string; key: string };
   country: { selected: boolean; display: string; key: string };
   location: { selected: boolean; display: string; key: string };
@@ -439,17 +452,20 @@ interface IProps {
       title_img: { origin: string; thumb: string };
     }
   ];
+  showModal: boolean;
   filterCnt: number;
   onClickFilter: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const MainContainer: React.FC<IProps> = ({
+  filters,
   sort,
   country,
   location,
   year,
   filterCnt,
   jobs,
+  showModal,
   onClickFilter
 }) => (
   <Container>
@@ -492,7 +508,16 @@ const MainContainer: React.FC<IProps> = ({
             </FilterBtnBox>
           </FilterBtns>
         </FilterBox>
-        <Modal />
+        {showModal && filters ? (
+          <Modal
+            filters={filters}
+            sort={sort}
+            country={country}
+            location={location}
+            year={year}
+            onClickFilter={onClickFilter}
+          />
+        ) : null}
         <H3Text>적극 채용중인 회사</H3Text>
         <CompanyBox>
           <CompanyUl>

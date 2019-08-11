@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useRef,
-  useCallback,
-  useReducer,
-  useState
-} from "react";
+import React, { useEffect, useCallback, useReducer, useState } from "react";
 import MainPresenter from "./MainPresenter";
 import axios from "axios";
 import Loader from "../../Components/Loader";
@@ -48,6 +42,7 @@ const reducer = (state: any, action: any) => {
       return {
         ...state,
         isLoading: false,
+        filters: action.filters,
         jobs: action.jobs,
         nextUrl: action.nextUrl
       };
@@ -69,6 +64,7 @@ const MainContainer: React.FC = () => {
   const {
     isLoading,
     isError,
+    filters,
     sort,
     country,
     location,
@@ -77,9 +73,8 @@ const MainContainer: React.FC = () => {
     jobs,
     nextUrl
   } = state;
-  // useRef를 사용할지 useState를 사용할지 검토필요. 일단은 고정값으로 useRef로 변경
-  const filters = useRef();
   const [url, setUrl] = useState();
+  const [showModal, setShowModal] = useState(false);
 
   // 초기 데이터 가져오기
   useEffect(() => {
@@ -104,10 +99,10 @@ const MainContainer: React.FC = () => {
             }
           }
         );
-        filters.current = filtersData;
         // state 상태 업데이트
         dispatch({
           type: "GET_SUCCESS",
+          filters: filtersData,
           jobs: jobsData,
           nextUrl: next
         });
@@ -151,6 +146,7 @@ const MainContainer: React.FC = () => {
     }
   }, [url]);
 
+  // Infinite Scroll 함수
   const onScroll = useCallback(() => {
     if (
       window.scrollY + document.documentElement.clientHeight >
@@ -160,6 +156,7 @@ const MainContainer: React.FC = () => {
     }
   }, [nextUrl]);
 
+  // 스크롤 이벤트 분리
   useEffect(() => {
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
@@ -172,8 +169,10 @@ const MainContainer: React.FC = () => {
 
   // useCallback 사용하여 함수가 계속 생성되는 것 방지
   const onClickFilter = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {},
-    []
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      setShowModal(showModal ? false : true);
+    },
+    [showModal]
   );
 
   return isLoading ? (
@@ -188,6 +187,8 @@ const MainContainer: React.FC = () => {
       year={year}
       filterCnt={filterCnt}
       jobs={jobs}
+      filters={filters}
+      showModal={showModal}
       onClickFilter={onClickFilter}
     />
   );
