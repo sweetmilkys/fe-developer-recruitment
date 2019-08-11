@@ -14,12 +14,6 @@ const Box = styled.div`
   position: relative;
   max-width: 1060px;
 
-  :after {
-    display: block;
-    content: "";
-    clear: both;
-  }
-
   @media (min-width: 768px) and (max-width: 991px) {
     width: 90%;
     margin: 0 auto;
@@ -38,37 +32,27 @@ const Box = styled.div`
   @media (max-width: 767px) {
     padding-bottom: 20px;
   }
+
+  :after {
+    display: block;
+    content: "";
+    clear: both;
+  }
 `;
 
 const Contant = styled.div`
   @media (max-width: 767px) {
     margin: 20px;
   }
-
-  ul {
-    margin: -10px;
-    padding: 0;
-  }
-
-  ul li {
-    width: 25%;
-    padding: 10px;
-    list-style: none;
-    display: inline-block;
-    vertical-align: top;
-
-    @media (max-width: 767px) {
-      width: 50%;
-    }
-    @media (min-width: 768px) and (max-width: 991px) {
-      width: 50%;
-    }
-  }
 `;
 
 const FilterBox = styled.div`
   top: 50px;
   margin-bottom: 10px;
+
+  @media (max-width: 767px) {
+    margin-bottom: 20px;
+  }
 
   :before {
     content: " ";
@@ -84,10 +68,6 @@ const FilterBox = styled.div`
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-  }
-
-  @media (max-width: 767px) {
-    margin-bottom: 20px;
   }
 `;
 
@@ -136,6 +116,7 @@ const MobileFilter = styled.div`
 
 const FilterBtnBox = styled.div`
   float: right;
+
   button {
     color: ${props => props.theme.mainColor};
   }
@@ -150,10 +131,6 @@ const FilterBtn = styled.button`
   font-weight: 400;
   padding: 9px 15px;
 
-  :hover {
-    background-color: #f9f9f9;
-  }
-
   @media (min-width: 768px) and (max-width: 991px) {
     margin-bottom: 10px;
   }
@@ -166,6 +143,10 @@ const FilterBtn = styled.button`
     .rcqdYh7jQOna89KEkhNjv {
       margin-bottom: 10px;
     }
+  }
+
+  :hover {
+    background-color: #f9f9f9;
   }
 
   + button {
@@ -221,67 +202,62 @@ const CompanyBox = styled.div`
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
   }
+`;
 
-  ul {
-    list-style: none;
+const CompanyUl = styled.ul`
+  list-style: none;
 
-    :after {
-      content: "";
-      display: block;
-      clear: both;
+  :after {
+    content: "";
+    display: block;
+    clear: both;
+  }
 
-      @media (max-width: 767px) {
-        width: 210%;
-        padding: 0 15px;
-      }
+  @media (max-width: 767px) {
+    width: 210%;
+    padding: 0 15px;
+  }
+
+  a {
+    text-decoration: inherit;
+    cursor: pointer;
+
+    :active,
+    :hover,
+    :visited {
+      color: inherit;
     }
 
-    a {
-      text-decoration: inherit;
-      cursor: pointer;
+    li {
+      width: calc(20% - 20px);
+      float: left;
+      margin: 0 10px;
+      position: relative;
 
-      :active,
-      :hover,
-      :visited {
-        color: inherit;
+      @media (max-width: 767px) {
+        width: calc(20% - 10px);
+        margin: 0 5px;
       }
 
-      li {
-        width: calc(20% - 20px);
-        float: left;
-        margin: 0 10px;
-        position: relative;
+      header {
+        height: 147px;
+        z-index: 1;
+        border-radius: 3px 3px 0 0;
+        overflow: hidden;
 
-        @media (max-width: 767px) {
-          width: calc(20% - 10px);
-          margin: 0 5px;
-        }
-
-        header {
-          height: 147px;
-          z-index: 1;
+        div {
+          height: calc(100% + 1px);
           border-radius: 3px 3px 0 0;
-          overflow: hidden;
+          background-position: 50%;
+          background-size: cover;
+          background-color: #f2f2f2;
+          background-repeat: no-repeat;
+          transition: all 0.5s ease-in-out;
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
 
-          div {
-            height: calc(100% + 1px);
-            border-radius: 3px 3px 0 0;
-            background-position: 50%;
-            background-size: cover;
-            background-color: #f2f2f2;
-            background-repeat: no-repeat;
-            transition: all 0.5s ease-in-out;
-            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
-
-            :hover {
-              -webkit-transform: scale(1.06);
-              transform: scale(1.06);
-            }
-
-            @media (max-width: 767px) {
-              height: 0;
-              padding-bottom: 75%;
-            }
+          :hover {
+            -webkit-transform: scale(1.06);
+            transform: scale(1.06);
           }
 
           @media (max-width: 767px) {
@@ -290,102 +266,102 @@ const CompanyBox = styled.div`
           }
         }
 
-        footer {
-          padding: 34px 16px 0;
-          height: 124px;
-          border: 1px solid ${props => props.theme.lightGreyColor};
-          border-top: none;
-          border-radius: 0 0 3px 3px;
-          position: relative;
+        @media (max-width: 767px) {
+          height: 0;
+          padding-bottom: 75%;
+        }
+      }
 
-          div {
-            position: absolute;
-            top: -25px;
-            left: 16px;
-            width: 50px;
-            height: 50px;
-            background-color: #f2f2f2;
-            background-position: 50%;
-            background-size: cover;
-            background-repeat: no-repeat;
-            z-index: 0;
-            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+      footer {
+        padding: 34px 16px 0;
+        height: 124px;
+        border: 1px solid ${props => props.theme.lightGreyColor};
+        border-top: none;
+        border-radius: 0 0 3px 3px;
+        position: relative;
 
-            @media (max-width: 767px) {
-              top: -18px;
-              left: 15px;
-              width: 36px;
-              height: 36px;
-            }
-          }
-
-          h4 {
-            position: relative;
-            font-size: 16px;
-            font-weight: 600;
-            letter-spacing: -0.3px;
-            color: ${props => props.theme.blackColor};
-            line-height: 1.2;
-            margin: 4px 0;
-            overflow: hidden;
-            max-height: 58px;
-
-            :hover {
-              color: ${props => props.theme.mainColor};
-            }
-            :after {
-              position: absolute;
-              content: "";
-              text-align: right;
-              bottom: 0;
-              right: 0;
-              width: 20%;
-              height: 30px;
-              background: linear-gradient(
-                90deg,
-                hsla(0, 0%, 100%, 0),
-                #fff 80%
-              );
-
-              @media (max-width: 767px) {
-                height: 15px;
-                margin-top: 15px;
-              }
-              @supports (-webkit-line-clamp: 2) and
-                (-webkit-box-orient: vertical) {
-                display: none;
-              }
-            }
-            @media (max-width: 767px) {
-              font-size: 15px;
-              max-height: 42px;
-            }
-            @supports (-webkit-line-clamp: 2) and (-webkit-box-orient: vertical) {
-              text-overflow: ellipsis;
-              display: -webkit-box;
-              -webkit-line-clamp: 2;
-              -webkit-box-orient: vertical;
-            }
-          }
-
-          h5 {
-            font-size: 14px;
-            font-weight: 400;
-            letter-spacing: -0.2px;
-            color: ${props => props.theme.greyColor};
-            margin-top: 6px;
-
-            @media (max-width: 767px) {
-              font-size: 13px;
-              margin-top: 8px;
-            }
-          }
+        div {
+          position: absolute;
+          top: -25px;
+          left: 16px;
+          width: 50px;
+          height: 50px;
+          background-color: #f2f2f2;
+          background-position: 50%;
+          background-size: cover;
+          background-repeat: no-repeat;
+          z-index: 0;
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
 
           @media (max-width: 767px) {
-            padding: 30px 15px;
-            position: relative;
-            height: 110px;
+            top: -18px;
+            left: 15px;
+            width: 36px;
+            height: 36px;
           }
+        }
+
+        h4 {
+          position: relative;
+          font-size: 16px;
+          font-weight: 600;
+          letter-spacing: -0.3px;
+          color: ${props => props.theme.blackColor};
+          line-height: 1.2;
+          margin: 4px 0;
+          overflow: hidden;
+          max-height: 58px;
+
+          :hover {
+            color: ${props => props.theme.mainColor};
+          }
+          :after {
+            position: absolute;
+            content: "";
+            text-align: right;
+            bottom: 0;
+            right: 0;
+            width: 20%;
+            height: 30px;
+            background: linear-gradient(90deg, hsla(0, 0%, 100%, 0), #fff 80%);
+
+            @media (max-width: 767px) {
+              height: 15px;
+              margin-top: 15px;
+            }
+            @supports (-webkit-line-clamp: 2) and (-webkit-box-orient: vertical) {
+              display: none;
+            }
+          }
+          @media (max-width: 767px) {
+            font-size: 15px;
+            max-height: 42px;
+          }
+          @supports (-webkit-line-clamp: 2) and (-webkit-box-orient: vertical) {
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+          }
+        }
+
+        h5 {
+          font-size: 14px;
+          font-weight: 400;
+          letter-spacing: -0.2px;
+          color: ${props => props.theme.greyColor};
+          margin-top: 6px;
+
+          @media (max-width: 767px) {
+            font-size: 13px;
+            margin-top: 8px;
+          }
+        }
+
+        @media (max-width: 767px) {
+          padding: 30px 15px;
+          position: relative;
+          height: 110px;
         }
       }
     }
@@ -405,7 +381,37 @@ const CompanyLogo = styled.div<IImgProps>`
   background-image: url(${props => props.logo});
 `;
 
-const List = styled.ul``;
+const List = styled.ul`
+  margin: -10px;
+  padding: 0;
+
+  :before {
+    content: " ";
+    display: table;
+    box-sizing: border-box;
+  }
+  :after {
+    clear: both;
+    content: " ";
+    display: table;
+    box-sizing: border-box;
+  }
+
+  li {
+    width: 25%;
+    padding: 10px;
+    list-style: none;
+    display: inline-block;
+    vertical-align: top;
+
+    @media (max-width: 767px) {
+      width: 50%;
+    }
+    @media (min-width: 768px) and (max-width: 991px) {
+      width: 50%;
+    }
+  }
+`;
 
 interface IProps {
   sort: { selected: boolean; display: string; key: string };
@@ -489,7 +495,7 @@ const MainContainer: React.FC<IProps> = ({
         <Modal />
         <H3Text>적극 채용중인 회사</H3Text>
         <CompanyBox>
-          <ul>
+          <CompanyUl>
             {[
               {
                 name: "원티드랩",
@@ -545,7 +551,7 @@ const MainContainer: React.FC<IProps> = ({
                 </li>
               </a>
             ))}
-          </ul>
+          </CompanyUl>
         </CompanyBox>
         <List>
           {jobs.map(
