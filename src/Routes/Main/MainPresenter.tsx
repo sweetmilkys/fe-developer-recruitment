@@ -7,7 +7,7 @@ import Modal from "../../Components/Modal";
 import Filter from "../../Components/Filter";
 
 const Container = styled.div`
-  background: #fff;
+  background: ${props => props.theme.whiteColor};
 `;
 
 const Box = styled.div`
@@ -56,6 +56,7 @@ const Contant = styled.div`
     list-style: none;
     display: inline-block;
     vertical-align: top;
+
     @media (max-width: 767px) {
       width: 50%;
     }
@@ -127,7 +128,7 @@ const MobileFilter = styled.div`
     font-size: 13px;
     font-weight: 600;
     line-height: 20px;
-    color: #fff;
+    color: ${props => props.theme.whiteColor};
     background-color: ${props => props.theme.mainColor};
     border-radius: 999px;
   }
@@ -136,14 +137,14 @@ const MobileFilter = styled.div`
 const FilterBtnBox = styled.div`
   float: right;
   button {
-    color: #2886fa;
+    color: ${props => props.theme.mainColor};
   }
 `;
 
 const FilterBtn = styled.button`
   border-radius: 2px;
-  border: 1px solid #e1e2e3;
-  background: #fff;
+  border: 1px solid ${props => props.theme.lightGreyColor};
+  background: ${props => props.theme.whiteColor};
   color: ${props => props.theme.blackColor};
   font-size: 13px;
   font-weight: 400;
@@ -185,7 +186,7 @@ const FilterBtnIcon = styled.span`
 
 const Icon = styled.i`
   content: "\ea0c";
-  color: ${props => props.theme.subColor};
+  color: ${props => props.theme.mainColor};
 `;
 
 const FilterBtnText = styled.span`
@@ -197,9 +198,199 @@ const FilterBtnText = styled.span`
   }
 `;
 
-const H3Text = styled.h3``;
+const H3Text = styled.h3`
+  font-size: 22px;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.3px;
+  color: ${props => props.theme.blackColor};
+  margin: 30px 0 14px;
 
-const CompanyContainer = styled.div``;
+  @media (max-width: 767px) {
+    font-size: 18px;
+    margin: 0 0 10px;
+  }
+`;
+
+const CompanyBox = styled.div`
+  margin: 0 -10px 60px;
+
+  @media (max-width: 767px) {
+    margin: 0 -20px 20px;
+    padding-bottom: 20px;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  ul {
+    list-style: none;
+
+    :after {
+      content: "";
+      display: block;
+      clear: both;
+
+      @media (max-width: 767px) {
+        width: 210%;
+        padding: 0 15px;
+      }
+    }
+
+    a {
+      text-decoration: inherit;
+      cursor: pointer;
+
+      :active,
+      :hover,
+      :visited {
+        color: inherit;
+      }
+
+      li {
+        width: calc(20% - 20px);
+        float: left;
+        margin: 0 10px;
+        position: relative;
+
+        @media (max-width: 767px) {
+          width: calc(20% - 10px);
+          margin: 0 5px;
+        }
+
+        header {
+          height: 147px;
+          z-index: 1;
+          border-radius: 3px 3px 0 0;
+          overflow: hidden;
+
+          div {
+            height: calc(100% + 1px);
+            border-radius: 3px 3px 0 0;
+            background-position: 50%;
+            background-size: cover;
+            background-color: #f2f2f2;
+            background-repeat: no-repeat;
+            transition: all 0.5s ease-in-out;
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+
+            :hover {
+              -webkit-transform: scale(1.06);
+              transform: scale(1.06);
+            }
+
+            @media (max-width: 767px) {
+              height: 0;
+              padding-bottom: 75%;
+            }
+          }
+
+          @media (max-width: 767px) {
+            height: 0;
+            padding-bottom: 75%;
+          }
+        }
+
+        footer {
+          padding: 34px 16px 0;
+          height: 124px;
+          border: 1px solid ${props => props.theme.lightGreyColor};
+          border-top: none;
+          border-radius: 0 0 3px 3px;
+          position: relative;
+
+          div {
+            position: absolute;
+            top: -25px;
+            left: 16px;
+            width: 50px;
+            height: 50px;
+            background-color: #f2f2f2;
+            background-position: 50%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            z-index: 0;
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+
+            @media (max-width: 767px) {
+              top: -18px;
+              left: 15px;
+              width: 36px;
+              height: 36px;
+            }
+          }
+
+          h4 {
+            position: relative;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            color: ${props => props.theme.blackColor};
+            line-height: 1.2;
+            margin: 4px 0;
+            overflow: hidden;
+            max-height: 58px;
+
+            :hover {
+              color: ${props => props.theme.mainColor};
+            }
+            :after {
+              position: absolute;
+              content: "";
+              text-align: right;
+              bottom: 0;
+              right: 0;
+              width: 20%;
+              height: 30px;
+              background: linear-gradient(
+                90deg,
+                hsla(0, 0%, 100%, 0),
+                #fff 80%
+              );
+
+              @media (max-width: 767px) {
+                height: 15px;
+                margin-top: 15px;
+              }
+              @supports (-webkit-line-clamp: 2) and
+                (-webkit-box-orient: vertical) {
+                display: none;
+              }
+            }
+            @media (max-width: 767px) {
+              font-size: 15px;
+              max-height: 42px;
+            }
+            @supports (-webkit-line-clamp: 2) and (-webkit-box-orient: vertical) {
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-line-clamp: 2;
+              -webkit-box-orient: vertical;
+            }
+          }
+
+          h5 {
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: -0.2px;
+            color: ${props => props.theme.greyColor};
+            margin-top: 6px;
+
+            @media (max-width: 767px) {
+              font-size: 13px;
+              margin-top: 8px;
+            }
+          }
+
+          @media (max-width: 767px) {
+            padding: 30px 15px;
+            position: relative;
+            height: 110px;
+          }
+        }
+      }
+    }
+  }
+`;
 
 interface IImgProps {
   bgImg?: string;
@@ -297,7 +488,7 @@ const MainContainer: React.FC<IProps> = ({
         </FilterBox>
         <Modal />
         <H3Text>적극 채용중인 회사</H3Text>
-        <CompanyContainer>
+        <CompanyBox>
           <ul>
             {[
               {
@@ -355,8 +546,7 @@ const MainContainer: React.FC<IProps> = ({
               </a>
             ))}
           </ul>
-        </CompanyContainer>
-        <CompanyContainer />
+        </CompanyBox>
         <List>
           {jobs.map(
             ({
