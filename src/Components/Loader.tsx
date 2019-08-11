@@ -1,12 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import Helmet from "react-helmet";
+import { LoaderImgProps } from "../types/local";
 
-interface IImgProps {
-  logo: string;
-}
-
-const Container = styled.div<IImgProps>`
+const Container = styled.div<LoaderImgProps>`
   display: flex;
   height: 300px;
   background-repeat: no-repeat;

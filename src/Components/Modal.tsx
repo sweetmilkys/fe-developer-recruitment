@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
+import { ActiveProps, ModalProps } from "../types/local";
 
 const Container = styled.div``;
 
@@ -17,18 +18,14 @@ const Job = styled.div``;
 
 const Countries = styled.div``;
 
-interface IBtnProps {
-  isActive?: boolean;
-}
-
-const CountryBtn = styled.button<IBtnProps>`
+const CountryBtn = styled.button<ActiveProps>`
   color: ${props =>
     props.isActive ? props.theme.subColor : props.theme.blackColor};
 `;
 
 const Locations = styled.div``;
 
-const LocationBtn = styled.button<IBtnProps>`
+const LocationBtn = styled.button<ActiveProps>`
   color: ${props =>
     props.isActive ? props.theme.subColor : props.theme.blackColor};
 `;
@@ -47,30 +44,8 @@ const BtnBox = styled.div``;
 
 const Bg = styled.div``;
 
-interface IProps {
-  filters: {
-    job_sort: [{ selected: boolean; display: string; key: string }];
-    employee_count: string[];
-    countries: [
-      {
-        selected: boolean;
-        display: string;
-        key: string;
-        locations: [{ selected: boolean; display: string; key: string }];
-      }
-    ];
-    years: [{ selected: boolean; display: string; key: string }];
-  };
-  sort: { selected: boolean; display: string; key: string };
-  country: { selected: boolean; display: string; key: string };
-  location: { selected: boolean; display: string; key: string };
-  year: { selected: boolean; display: string; key: string };
-  onClickFilter: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  onClickSubmitBtn: (event: React.MouseEvent<HTMLButtonElement>) => void;
-}
-
 // 필터 모달창
-const Modal: React.FC<IProps> = React.memo(
+const Modal: React.FC<ModalProps> = React.memo(
   ({
     filters: { job_sort, countries, years },
     sort,

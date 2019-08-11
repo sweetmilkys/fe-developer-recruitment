@@ -1,8 +1,8 @@
 import React, { useEffect, useCallback, useReducer, useState } from "react";
 import MainPresenter from "./MainPresenter";
 import axios from "axios";
-import Loader from "../../Components/Loader";
-import Error from "../../Components/Error";
+import Loader from "../../components/Loader";
+import Error from "../../components/Error";
 
 const initialState = {
   isLoading: true,

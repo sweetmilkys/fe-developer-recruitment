@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { ActiveProps, FilterProps } from "../types/local";
 
 const FilterBtn = styled.button`
   border-radius: 2px;
@@ -35,30 +36,19 @@ const FilterBtn = styled.button`
   }
 `;
 
-interface ITextProps {
-  isActive?: boolean;
-}
-
-const FilterText1 = styled.span<ITextProps>`
+const FilterText1 = styled.span<ActiveProps>`
   margin-right: 5px;
   color: ${props => props.theme.greyColor};
 `;
 
-const FilterText2 = styled.span<ITextProps>`
+const FilterText2 = styled.span<ActiveProps>`
   font-weight: 600;
   color: ${props =>
     props.isActive ? props.theme.mainColor : props.theme.blackColor};
 `;
 
-interface IProps {
-  category: string | null;
-  display: string;
-  selected: boolean;
-  onClickFilter: (event: React.MouseEvent<HTMLButtonElement>) => void;
-}
-
 // props 변경시에만 렌더링 되도록 memo사용
-const Filter: React.FC<IProps> = React.memo(
+const Filter: React.FC<FilterProps> = React.memo(
   ({ category, display, selected, onClickFilter }) => {
     return (
       <FilterBtn onClick={onClickFilter}>

@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import Helmet from "react-helmet";
-import Poster from "../../Components/Poster";
-import Modal from "../../Components/Modal";
-import Filter from "../../Components/Filter";
+import Poster from "../../components/Poster";
+import Modal from "../../components/Modal";
+import Filter from "../../components/Filter";
+import { ImgProps, MainPresenterProps } from "../../types/local";
 
 const Container = styled.div`
   background: ${props => props.theme.whiteColor};
@@ -367,16 +368,11 @@ const CompanyUl = styled.ul`
   }
 `;
 
-interface IImgProps {
-  bgImg?: string;
-  logo?: string;
-}
-
-const CompanyImg = styled.div<IImgProps>`
+const CompanyImg = styled.div<ImgProps>`
   background-image: url(${props => props.bgImg});
 `;
 
-const CompanyLogo = styled.div<IImgProps>`
+const CompanyLogo = styled.div<ImgProps>`
   background-image: url(${props => props.logo});
 `;
 
@@ -412,52 +408,7 @@ const List = styled.ul`
   }
 `;
 
-interface IProps {
-  filters: {
-    job_sort: [{ selected: boolean; display: string; key: string }];
-    employee_count: string[];
-    countries: [
-      {
-        selected: boolean;
-        display: string;
-        key: string;
-        locations: [{ selected: boolean; display: string; key: string }];
-      }
-    ];
-    years: [{ selected: boolean; display: string; key: string }];
-  } | null;
-  sort: { selected: boolean; display: string; key: string };
-  country: { selected: boolean; display: string; key: string };
-  location: { selected: boolean; display: string; key: string };
-  year: { selected: boolean; display: string; key: string };
-  jobs: [
-    {
-      address: { country: string; location: string };
-      company: { id: number; name: string; industry_name: string };
-      compare_country: boolean;
-      due_time: string | null;
-      id: number;
-      is_bookmark: boolean;
-      is_like: boolean;
-      like_count: number;
-      logo_img: { origin: string; thumb: string };
-      position: string;
-      reward: {
-        formatted_total: string;
-        formatted_recommender: string;
-        formatted_recommendee: string;
-      };
-      status: string;
-      title_img: { origin: string; thumb: string };
-    }
-  ];
-  showModal: boolean;
-  filterCnt: number;
-  onClickFilter: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  onClickSubmitBtn: (event: React.MouseEvent<HTMLButtonElement>) => void;
-}
-
-const MainContainer: React.FC<IProps> = ({
+const MainPresenter: React.FC<MainPresenterProps> = ({
   filters,
   sort,
   country,
@@ -612,4 +563,4 @@ const MainContainer: React.FC<IProps> = ({
   </Container>
 );
 
-export default MainContainer;
+export default MainPresenter;

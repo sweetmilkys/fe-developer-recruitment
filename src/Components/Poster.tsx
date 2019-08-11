@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { ImgProps, PosterProps } from "../types/local";
 
 const Container = styled.div`
   a {
@@ -7,11 +8,7 @@ const Container = styled.div`
   }
 `;
 
-interface IImgProps {
-  bgUrl: string;
-}
-
-const Header = styled.header<IImgProps>`
+const Header = styled.header<ImgProps>`
   background-image: url(${props => props.bgUrl});
   padding-bottom: 75%;
   position: relative;
@@ -181,19 +178,8 @@ const Reward = styled.div`
   font-weight: 400;
 `;
 
-interface IProps {
-  id: number;
-  likeCount: number;
-  position: string;
-  company: string;
-  country: string;
-  location: string;
-  reward: string;
-  bgUrl: string;
-}
-
 // props 변경시에만 렌더링 되도록 memo사용(인피티니 스크롤 시 기존 컴포넌트 재렌더링 방지)
-const Poster: React.FC<IProps> = React.memo(
+const Poster: React.FC<PosterProps> = React.memo(
   ({ id, likeCount, position, company, country, location, reward, bgUrl }) => (
     <li>
       <Container>
