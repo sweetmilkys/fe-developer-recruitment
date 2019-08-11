@@ -415,7 +415,7 @@ const List = styled.ul`
 
 interface IProps {
   sort: { selected: boolean; display: string; key: string };
-  countrie: { selected: boolean; display: string; key: string };
+  country: { selected: boolean; display: string; key: string };
   location: { selected: boolean; display: string; key: string };
   year: { selected: boolean; display: string; key: string };
   jobs: [
@@ -445,7 +445,7 @@ interface IProps {
 
 const MainContainer: React.FC<IProps> = ({
   sort,
-  countrie,
+  country,
   location,
   year,
   filterCnt,
@@ -463,7 +463,7 @@ const MainContainer: React.FC<IProps> = ({
             <WebFiltersBtns>
               {[
                 { category: null, val: sort },
-                { category: "국가", val: countrie },
+                { category: "국가", val: country },
                 { category: "지역", val: location },
                 { category: "경력", val: year }
               ].map(({ category, val: { selected, display } }) => (
