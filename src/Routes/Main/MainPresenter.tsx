@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import Helmet from "react-helmet";
 import Poster from "../../Components/Poster";
-import Messeage from "../../Components/Messeage";
 import Modal from "../../Components/Modal";
 import Filter from "../../Components/Filter";
 
@@ -605,7 +604,6 @@ const MainContainer: React.FC<IProps> = ({
             }
           )}
         </List>
-        <Messeage />
       </Contant>
     </Box>
   </Container>

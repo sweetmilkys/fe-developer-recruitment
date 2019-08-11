@@ -194,35 +194,33 @@ interface IProps {
 
 // props 변경시에만 렌더링 되도록 memo사용(인피티니 스크롤 시 기존 컴포넌트 재렌더링 방지)
 const Poster: React.FC<IProps> = React.memo(
-  ({ id, likeCount, position, company, country, location, reward, bgUrl }) => {
-    return (
-      <li>
-        <Container>
-          <a href={`https://www.wanted.co.kr/wd/${id}`} target="_self">
-            <Header bgUrl={bgUrl}>
-              <LikeBtn>
-                <Icon className="fas fa-heart" />
-                {likeCount}
-              </LikeBtn>
-            </Header>
-            <Content>
-              <ContentDl>
-                <ContentDt>{position}</ContentDt>
-                <ContentDd>
-                  {company}
-                  <br />
-                  <span>{country}</span>
-                  <AddressDot>.</AddressDot>
-                  <span>{location}</span>
-                </ContentDd>
-              </ContentDl>
-              <Reward>{`채용보상금 ${reward}`}</Reward>
-            </Content>
-          </a>
-        </Container>
-      </li>
-    );
-  }
+  ({ id, likeCount, position, company, country, location, reward, bgUrl }) => (
+    <li>
+      <Container>
+        <a href={`https://www.wanted.co.kr/wd/${id}`} target="_self">
+          <Header bgUrl={bgUrl}>
+            <LikeBtn>
+              <Icon className="fas fa-heart" />
+              {likeCount}
+            </LikeBtn>
+          </Header>
+          <Content>
+            <ContentDl>
+              <ContentDt>{position}</ContentDt>
+              <ContentDd>
+                {company}
+                <br />
+                <span>{country}</span>
+                <AddressDot>.</AddressDot>
+                <span>{location}</span>
+              </ContentDd>
+            </ContentDl>
+            <Reward>{`채용보상금 ${reward}`}</Reward>
+          </Content>
+        </a>
+      </Container>
+    </li>
+  )
 );
 
 export default Poster;
