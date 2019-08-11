@@ -34,7 +34,7 @@ interface IProps {
   bgUrl: string;
 }
 
-// 채용 리스트
+// props 변경시에만 렌더링 되도록 memo사용(인피티니 스크롤 시 기존 컴포넌트 재렌더링 방지)
 const Poster: React.FC<IProps> = React.memo(
   ({ id, likeCount, position, company, country, location, reward, bgUrl }) => {
     return (

@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import Helmet from "react-helmet";
 import Poster from "../../Components/Poster";
 import Messeage from "../../Components/Messeage";
 import Modal from "../../Components/Modal";
@@ -44,9 +45,9 @@ const List = styled.ul``;
 
 interface IProps {
   sort: { selected: boolean; display: string; key: string };
-  countries: { selected: boolean; display: string; key: string };
-  locations: { selected: boolean; display: string; key: string };
-  years: { selected: boolean; display: string; key: string };
+  countrie: { selected: boolean; display: string; key: string };
+  location: { selected: boolean; display: string; key: string };
+  year: { selected: boolean; display: string; key: string };
   jobs: [
     {
       address: { country: string; location: string };
@@ -69,34 +70,37 @@ interface IProps {
     }
   ];
   filterCnt: number;
-  filterOnClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClickFilter: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const MainContainer: React.FC<IProps> = ({
   sort,
-  countries,
-  locations,
-  years,
+  countrie,
+  location,
+  year,
   filterCnt,
   jobs,
-  filterOnClick
+  onClickFilter
 }) => (
   <Container>
+    <Helmet>
+      <title>채용 | 원티드</title>
+    </Helmet>
     <FilterBox>
       <FilterBtns>
         <WebFiltersBtns>
           {[
             { category: null, val: sort },
-            { category: "국가", val: countries },
-            { category: "지역", val: locations },
-            { category: "경력", val: years }
+            { category: "국가", val: countrie },
+            { category: "지역", val: location },
+            { category: "경력", val: year }
           ].map(({ category, val: { selected, display } }) => (
             <Filter
               key={display}
               category={category}
               display={display}
               selected={selected}
-              filterOnClick={filterOnClick}
+              onClickFilter={onClickFilter}
             />
           ))}
         </WebFiltersBtns>
@@ -105,7 +109,7 @@ const MainContainer: React.FC<IProps> = ({
           <p>{filterCnt}</p>
         </MobileFilter>
         <FilterBtnBox>
-          <FilterBtn onClick={filterOnClick}>
+          <FilterBtn onClick={onClickFilter}>
             <FilterBtnIcon>
               <i className="fas fa-filter" />
             </FilterBtnIcon>

@@ -16,13 +16,14 @@ interface IProps {
   category: string | null;
   display: string;
   selected: boolean;
-  filterOnClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClickFilter: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
+// props 변경시에만 렌더링 되도록 memo사용
 const FilterBtn: React.FC<IProps> = React.memo(
-  ({ category, display, selected, filterOnClick }) => {
+  ({ category, display, selected, onClickFilter }) => {
     return (
-      <Filter onClick={filterOnClick}>
+      <Filter onClick={onClickFilter}>
         {category !== null ? <FilterText>{category}</FilterText> : null}
         <FilterText isActive={selected}>{display}</FilterText>
       </Filter>
