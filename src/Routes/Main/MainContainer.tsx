@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useCallback, useReducer } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useCallback,
+  useReducer,
+  useState
+} from "react";
 import MainPresenter from "./MainPresenter";
 import axios from "axios";
 import Loader from "../../Components/Loader";
@@ -29,25 +35,29 @@ const initialState = {
   },
   filterCnt: 2,
   jobs: null,
-  next: null
+  nextUrl: null
 };
 
-export const GET_DATA = "GET_DATA";
 export const GET_SUCCESS = "GET_SUCCESS";
-export const GET_FAILURE = "GET_FAILURE";
+export const FETCH_SUCCESS = "FETCH_SUCCESS";
+export const API_FAILURE = "API_FAILURE";
 
 const reducer = (state: any, action: any) => {
   switch (action.type) {
-    case GET_DATA:
-      return { ...state };
     case GET_SUCCESS:
       return {
         ...state,
         isLoading: false,
         jobs: action.jobs,
-        next: action.next
+        nextUrl: action.nextUrl
       };
-    case GET_FAILURE:
+    case FETCH_SUCCESS:
+      return {
+        ...state,
+        jobs: [...state.jobs, ...action.jobs],
+        nextUrl: action.nextUrl
+      };
+    case API_FAILURE:
       return { ...state, isLoading: false, isError: true };
     default:
       return state;
@@ -65,15 +75,15 @@ const MainContainer: React.FC = () => {
     year,
     filterCnt,
     jobs,
-    next
+    nextUrl
   } = state;
   // useRef를 사용할지 useState를 사용할지 검토필요. 일단은 고정값으로 useRef로 변경
   const filters = useRef();
+  const [url, setUrl] = useState();
 
-  // 초기 렌더링시 필터 데이터 받아서 고정
+  // 초기 데이터 가져오기
   useEffect(() => {
     const getData = async () => {
-      dispatch({ type: "GET_DATA" });
       try {
         // api에서 데이터 가져와 세팅
         const { data: filtersData } = await axios.get("/api/v4/filters", {
@@ -95,27 +105,60 @@ const MainContainer: React.FC = () => {
           }
         );
         filters.current = filtersData;
+        // state 상태 업데이트
         dispatch({
           type: "GET_SUCCESS",
           jobs: jobsData,
-          next: next
+          nextUrl: next
         });
       } catch (error) {
         // 에러화면 보이도록 세팅
-        dispatch({ type: "GET_FAILURE" });
+        dispatch({ type: "API_FAILURE" });
       }
     };
     getData();
   }, []);
+
+  // 추가 데이터 가져오기
+  // 현재는 초기데이터, 추가데이터로 useEffect 분리했지만 api별로 분리하는 것 검토팔요
+  useEffect(() => {
+    if (url) {
+      const fetchData = async () => {
+        try {
+          // api에서 데이터 가져와 세팅
+          const {
+            data: {
+              data: jobsData,
+              links: { next }
+            }
+          } = await axios.get(url, {
+            headers: {
+              "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7"
+            }
+          });
+          // state 상태 업데이트
+          dispatch({
+            type: "FETCH_SUCCESS",
+            jobs: jobsData,
+            nextUrl: next
+          });
+        } catch (error) {
+          // 에러화면 보이도록 세팅
+          dispatch({ type: "API_FAILURE" });
+        }
+      };
+      fetchData();
+    }
+  }, [url]);
 
   const onScroll = useCallback(() => {
     if (
       window.scrollY + document.documentElement.clientHeight >
       document.documentElement.scrollHeight - 300
     ) {
-      //setUrl(!nextJobs.current ? nextJobs.current : );
+      setUrl(nextUrl);
     }
-  }, []);
+  }, [nextUrl]);
 
   useEffect(() => {
     if ("scrollRestoration" in window.history) {

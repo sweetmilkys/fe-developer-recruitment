@@ -44,15 +44,17 @@ const LikeBtn = styled.button`
     top: 5px;
     right: 5px;
   }
+
+  :hover {
+    i {
+      color: ${props => props.theme.mainColor};
+    }
+  }
 `;
 
 const Icon = styled.i`
   margin-right: 5px;
   color: hsla(0, 0%, 100%, 0.3);
-
-  :hover {
-    color: ${props => props.theme.mainColor};
-  }
 `;
 
 const Content = styled.div`
