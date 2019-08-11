@@ -66,109 +66,142 @@ interface IProps {
   location: { selected: boolean; display: string; key: string };
   year: { selected: boolean; display: string; key: string };
   onClickFilter: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClickSubmitBtn: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 // 필터 모달창
-const Modal: React.FC<IProps> = ({
-  filters: { job_sort, countries, years },
-  sort,
-  country,
-  location,
-  year,
-  onClickFilter
-}) => {
-  const locationsData: any = useRef();
+const Modal: React.FC<IProps> = React.memo(
+  ({
+    filters: { job_sort, countries, years },
+    sort,
+    country,
+    location,
+    year,
+    onClickFilter,
+    onClickSubmitBtn
+  }) => {
+    const locationsData: any = useRef();
 
-  countries.forEach(({ key, locations }) => {
-    if (country.key === key) locationsData.current = locations;
-  });
+    console.log("모달창");
 
-  return (
-    <Container>
-      <Contant>
-        <Box>
-          <HeaderBox>
-            <button>
-              <i />
-              초기화
-            </button>
-            <span>필터</span>
-            <button onClick={onClickFilter}>
-              <i className="fas fa-times" />
-            </button>
-          </HeaderBox>
-          <FilterBox>
-            <Filters>
-              <Job>
-                <SelectH6>정렬</SelectH6>
-                <SelectDiv>
-                  <select defaultValue={sort.key}>
-                    {job_sort.map(({ key, display }) => {
+    countries.forEach(({ key, locations }) => {
+      if (country.key === key) locationsData.current = locations;
+    });
+
+    const onChangeJob = (event: React.FormEvent<HTMLSelectElement>) => {
+      event.preventDefault();
+      console.log(event.currentTarget.value);
+    };
+
+    const onClickCountryBtn = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      console.log(event.currentTarget.textContent);
+    };
+
+    const onClickLocationBtn = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      console.log(event.currentTarget.textContent);
+    };
+
+    const onChangeYears = (event: React.FormEvent<HTMLSelectElement>) => {
+      event.preventDefault();
+      console.log(event.currentTarget.value);
+    };
+
+    return (
+      <Container>
+        <Contant>
+          <Box>
+            <HeaderBox>
+              <button>
+                <i />
+                초기화
+              </button>
+              <span>필터</span>
+              <button onClick={onClickFilter}>
+                <i className="fas fa-times" />
+              </button>
+            </HeaderBox>
+            <FilterBox>
+              <Filters>
+                <Job>
+                  <SelectH6>정렬</SelectH6>
+                  <SelectDiv>
+                    <select defaultValue={sort.key} onChange={onChangeJob}>
+                      {job_sort.map(({ key, display }) => {
+                        return (
+                          <option key={key} value={key}>
+                            {display}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </SelectDiv>
+                </Job>
+                <Countries>
+                  <BtnH6>국가</BtnH6>
+                  <BtnDiv>
+                    {countries.map(({ key, display }) => {
                       return (
-                        <option key={key} value={key}>
+                        <CountryBtn
+                          key={key}
+                          type="button"
+                          isActive={country.key === key}
+                          onClick={onClickCountryBtn}
+                        >
                           {display}
-                        </option>
+                        </CountryBtn>
                       );
                     })}
-                  </select>
-                </SelectDiv>
-              </Job>
-              <Countries>
-                <BtnH6>국가</BtnH6>
-                <BtnDiv>
-                  {countries.map(({ key, display }) => {
-                    return (
-                      <CountryBtn
-                        key={key}
-                        type="button"
-                        isActive={country.key === key}
-                      >
-                        {display}
-                      </CountryBtn>
-                    );
-                  })}
-                </BtnDiv>
-              </Countries>
-              <Locations>
-                <BtnH6>지역</BtnH6>
-                <BtnDiv>
-                  {locationsData.current.map(({ display, key }: any) => {
-                    return (
-                      <LocationBtn key={key} isActive={location.key === key}>
-                        {display}
-                      </LocationBtn>
-                    );
-                  })}
-                </BtnDiv>
-              </Locations>
-              <Years>
-                <SelectH6>경력</SelectH6>
-                <SelectDiv>
-                  <select defaultValue={year.key}>
-                    {years.map(({ key, display }) => {
+                  </BtnDiv>
+                </Countries>
+                <Locations>
+                  <BtnH6>지역</BtnH6>
+                  <BtnDiv>
+                    {locationsData.current.map(({ display, key }: any) => {
                       return (
-                        <option key={key} value={key}>
+                        <LocationBtn
+                          key={key}
+                          isActive={location.key === key}
+                          onClick={onClickLocationBtn}
+                        >
                           {display}
-                        </option>
+                        </LocationBtn>
                       );
                     })}
-                  </select>
-                </SelectDiv>
-              </Years>
-              <State>
-                <input type="checkbox" />
-                적용된 필터를 저장하고 유지합니다.
-              </State>
-            </Filters>
-          </FilterBox>
-          <BtnBox>
-            <button type="submit">적용</button>
-          </BtnBox>
-        </Box>
-      </Contant>
-      <Bg />
-    </Container>
-  );
-};
+                  </BtnDiv>
+                </Locations>
+                <Years>
+                  <SelectH6>경력</SelectH6>
+                  <SelectDiv>
+                    <select defaultValue={year.key} onChange={onChangeYears}>
+                      {years.map(({ key, display }) => {
+                        return (
+                          <option key={key} value={key}>
+                            {display}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </SelectDiv>
+                </Years>
+                <State>
+                  <input type="checkbox" />
+                  적용된 필터를 저장하고 유지합니다.
+                </State>
+              </Filters>
+            </FilterBox>
+            <BtnBox>
+              <button type="submit" onClick={onClickSubmitBtn}>
+                적용
+              </button>
+            </BtnBox>
+          </Box>
+        </Contant>
+        <Bg />
+      </Container>
+    );
+  }
+);
 
 export default Modal;

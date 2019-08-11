@@ -454,6 +454,7 @@ interface IProps {
   showModal: boolean;
   filterCnt: number;
   onClickFilter: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClickSubmitBtn: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const MainContainer: React.FC<IProps> = ({
@@ -465,7 +466,8 @@ const MainContainer: React.FC<IProps> = ({
   filterCnt,
   jobs,
   showModal,
-  onClickFilter
+  onClickFilter,
+  onClickSubmitBtn
 }) => (
   <Container>
     <Helmet>
@@ -515,6 +517,7 @@ const MainContainer: React.FC<IProps> = ({
             location={location}
             year={year}
             onClickFilter={onClickFilter}
+            onClickSubmitBtn={onClickSubmitBtn}
           />
         ) : null}
         <H3Text>적극 채용중인 회사</H3Text>

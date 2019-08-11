@@ -32,24 +32,23 @@ const initialState = {
   nextUrl: null
 };
 
-export const GET_SUCCESS = "GET_SUCCESS";
-export const FETCH_SUCCESS = "FETCH_SUCCESS";
+export const GET_FILTERS = "GET_FILTERS";
+export const GET_JOBS = "GET_JOBS";
 export const API_FAILURE = "API_FAILURE";
 
 const reducer = (state: any, action: any) => {
+  console.log("리듀서");
   switch (action.type) {
-    case GET_SUCCESS:
+    case GET_FILTERS:
+      return {
+        ...state,
+        filters: action.filters
+      };
+    case GET_JOBS:
       return {
         ...state,
         isLoading: false,
-        filters: action.filters,
-        jobs: action.jobs,
-        nextUrl: action.nextUrl
-      };
-    case FETCH_SUCCESS:
-      return {
-        ...state,
-        jobs: [...state.jobs, ...action.jobs],
+        jobs: state.jobs ? [...state.jobs, ...action.jobs] : [...action.jobs],
         nextUrl: action.nextUrl
       };
     case API_FAILURE:
@@ -60,6 +59,7 @@ const reducer = (state: any, action: any) => {
 };
 
 const MainContainer: React.FC = () => {
+  console.log("메인");
   const [state, dispatch] = useReducer(reducer, initialState);
   const {
     isLoading,
@@ -73,54 +73,38 @@ const MainContainer: React.FC = () => {
     jobs,
     nextUrl
   } = state;
-  const [url, setUrl] = useState();
+  const [url, setUrl] = useState(
+    "/api/v4/jobs?country=kr&job_sort=job.latest_order&years=-1&locations=all"
+  );
   const [showModal, setShowModal] = useState(false);
 
-  // 초기 데이터 가져오기
+  // 필터 데이터 가져오기
   useEffect(() => {
+    console.log("필터데이터");
     const getData = async () => {
       try {
-        // api에서 데이터 가져와 세팅
         const { data: filtersData } = await axios.get("/api/v4/filters", {
           headers: {
             "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7"
           }
         });
-        const {
-          data: {
-            data: jobsData,
-            links: { next }
-          }
-        } = await axios.get(
-          "/api/v4/jobs?country=kr&job_sort=job.latest_order&years=-1&locations=all",
-          {
-            headers: {
-              "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7"
-            }
-          }
-        );
-        // state 상태 업데이트
         dispatch({
-          type: "GET_SUCCESS",
-          filters: filtersData,
-          jobs: jobsData,
-          nextUrl: next
+          type: GET_FILTERS,
+          filters: filtersData
         });
       } catch (error) {
-        // 에러화면 보이도록 세팅
-        dispatch({ type: "API_FAILURE" });
+        dispatch({ type: API_FAILURE });
       }
     };
     getData();
   }, []);
 
-  // 추가 데이터 가져오기
-  // 현재는 초기데이터, 추가데이터로 useEffect 분리했지만 api별로 분리하는 것 검토팔요
+  // 잡 데이터 가져오기
   useEffect(() => {
+    console.log("데이터");
     if (url) {
       const fetchData = async () => {
         try {
-          // api에서 데이터 가져와 세팅
           const {
             data: {
               data: jobsData,
@@ -131,15 +115,13 @@ const MainContainer: React.FC = () => {
               "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7"
             }
           });
-          // state 상태 업데이트
           dispatch({
-            type: "FETCH_SUCCESS",
+            type: GET_JOBS,
             jobs: jobsData,
             nextUrl: next
           });
         } catch (error) {
-          // 에러화면 보이도록 세팅
-          dispatch({ type: "API_FAILURE" });
+          dispatch({ type: API_FAILURE });
         }
       };
       fetchData();
@@ -148,6 +130,7 @@ const MainContainer: React.FC = () => {
 
   // Infinite Scroll 함수
   const onScroll = useCallback(() => {
+    console.log("스크롤함수");
     if (
       window.scrollY + document.documentElement.clientHeight >
       document.documentElement.scrollHeight - 300
@@ -156,8 +139,9 @@ const MainContainer: React.FC = () => {
     }
   }, [nextUrl]);
 
-  // 스크롤 이벤트 분리
+  // 스크롤 이벤트
   useEffect(() => {
+    console.log("스크롤이벤트");
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
@@ -170,9 +154,18 @@ const MainContainer: React.FC = () => {
   // useCallback 사용하여 함수가 계속 생성되는 것 방지
   const onClickFilter = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
+      console.log("클릭이벤트");
       setShowModal(showModal ? false : true);
     },
     [showModal]
+  );
+
+  const onClickSubmitBtn = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      console.log("클릭");
+    },
+    []
   );
 
   return isLoading ? (
@@ -190,6 +183,7 @@ const MainContainer: React.FC = () => {
       filters={filters}
       showModal={showModal}
       onClickFilter={onClickFilter}
+      onClickSubmitBtn={onClickSubmitBtn}
     />
   );
 };
