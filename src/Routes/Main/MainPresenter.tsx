@@ -417,8 +417,7 @@ const MainPresenter: React.FC<MainPresenterProps> = ({
   filterCnt,
   jobs,
   showModal,
-  onClickFilter,
-  onClickSubmitBtn
+  onClickFilter
 }) => (
   <Container>
     <Helmet>
@@ -436,7 +435,7 @@ const MainPresenter: React.FC<MainPresenterProps> = ({
                 { category: "경력", val: year }
               ].map(({ category, val: { selected, display } }) => (
                 <Filter
-                  key={display}
+                  key={category + display}
                   category={category}
                   display={display}
                   selected={selected}
@@ -465,10 +464,9 @@ const MainPresenter: React.FC<MainPresenterProps> = ({
             filters={filters}
             sort={sort}
             country={country}
-            location={location}
+            locations={location}
             year={year}
             onClickFilter={onClickFilter}
-            onClickSubmitBtn={onClickSubmitBtn}
           />
         ) : null}
         <H3Text>적극 채용중인 회사</H3Text>

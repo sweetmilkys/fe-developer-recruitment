@@ -1,7 +1,6 @@
-export interface ImgProps {
-  bgImg?: string;
-  logo?: string;
-  bgUrl?: string;
+export interface MainCotainerProps {
+  location: RouteComponentProps["location"];
+  history: RouteComponentProps["history"];
 }
 
 export interface MainPresenterProps {
@@ -22,6 +21,7 @@ export interface MainPresenterProps {
   country: { selected: boolean; display: string; key: string };
   location: { selected: boolean; display: string; key: string };
   year: { selected: boolean; display: string; key: string };
+  filterCnt: number;
   jobs: [
     {
       address: { country: string; location: string };
@@ -44,28 +44,11 @@ export interface MainPresenterProps {
     }
   ];
   showModal: boolean;
-  filterCnt: number;
   onClickFilter: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  onClickSubmitBtn: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export interface LoaderImgProps {
   logo: string;
-}
-
-export interface ActiveProps {
-  isActive?: boolean;
-}
-
-export interface FilterProps {
-  category: string | null;
-  display: string;
-  selected: boolean;
-  onClickFilter: (event: React.MouseEvent<HTMLButtonElement>) => void;
-}
-
-export interface IBtnProps {
-  isActive?: boolean;
 }
 
 export interface PosterProps {
@@ -77,6 +60,13 @@ export interface PosterProps {
   location: string;
   reward: string;
   bgUrl: string;
+}
+
+export interface FilterProps {
+  category: string | null;
+  display: string;
+  selected: boolean;
+  onClickFilter: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export interface ModalProps {
@@ -95,8 +85,23 @@ export interface ModalProps {
   };
   sort: { selected: boolean; display: string; key: string };
   country: { selected: boolean; display: string; key: string };
-  location: { selected: boolean; display: string; key: string };
+  locations: { selected: boolean; display: string; key: string };
   year: { selected: boolean; display: string; key: string };
   onClickFilter: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  onClickSubmitBtn: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  history: RouteComponentProps["history"];
+  location: RouteComponentProps["location"];
+}
+
+export interface ActiveProps {
+  isActive?: boolean;
+}
+
+export interface ImgProps {
+  bgImg?: string;
+  logo?: string;
+  bgUrl?: string;
+}
+
+export interface IBtnProps {
+  isActive?: boolean;
 }

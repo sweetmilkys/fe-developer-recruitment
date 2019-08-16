@@ -1,6 +1,7 @@
-import React, { useRef } from "react";
+import React, { useRef, memo, useCallback } from "react";
 import styled from "styled-components";
-import { ActiveProps, ModalProps } from "../types/local";
+import { ModalProps, ActiveProps } from "../types/local";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 
 const Container = styled.div`
   top: 0;
@@ -14,8 +15,8 @@ const Container = styled.div`
 
 const Contant = styled.div`
   z-index: 5;
-  border-radius: 5px;
   background-color: #fff;
+  border-radius: 5px;
   position: absolute;
   overflow: hidden;
 
@@ -266,33 +267,33 @@ const BtnBox = styled.div`
   @media (max-width: 767px) {
     margin-top: 50px;
   }
+`;
 
-  button {
-    color: #fff;
-    background: #238ff4;
-    font-size: 18px;
-    font-weight: 600;
-    padding: 12px 20px;
-    width: 100%;
+const SubmitBtn = styled.button`
+  color: #fff;
+  background: #238ff4;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 12px 20px;
+  width: 100%;
 
-    @media (min-width: 768px) and (max-width: 991px) {
-      border-radius: 3px;
-    }
-    @media (min-width: 992px) and (max-width: 1199px) {
-      border-radius: 3px;
-    }
-    @media (min-width: 1200px) {
-      border-radius: 3px;
-    }
-    @media (max-width: 767px) {
-      font-size: 17px;
-      padding: 13px 20px;
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 1003;
-    }
+  @media (min-width: 768px) and (max-width: 991px) {
+    border-radius: 3px;
+  }
+  @media (min-width: 992px) and (max-width: 1199px) {
+    border-radius: 3px;
+  }
+  @media (min-width: 1200px) {
+    border-radius: 3px;
+  }
+  @media (max-width: 767px) {
+    font-size: 17px;
+    padding: 13px 20px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1003;
   }
 `;
 
@@ -307,25 +308,22 @@ const Bg = styled.div`
 `;
 
 // 필터 모달창
-const Modal: React.FC<ModalProps> = React.memo(
+const Modal: React.FC<ModalProps & RouteComponentProps> = memo(
   ({
     filters: { job_sort, countries, years },
     sort,
     country,
-    location,
+    locations,
     year,
     onClickFilter,
-    onClickSubmitBtn
+    history,
+    location
   }) => {
     const locationsData: any = useRef();
     const selecteSort = useRef(sort.key);
     const selecteCountry = useRef(country.display);
-    const selecteLocations = useRef(location.display);
+    const selecteLocations = useRef(locations.display);
     const selecteYear = useRef(year.key);
-
-    console.log("모달창");
-    console.log(selecteCountry.current);
-    console.log(selecteLocations.current);
 
     countries.forEach(({ key, locations }) => {
       if (country.key === key) locationsData.current = locations;
@@ -334,27 +332,35 @@ const Modal: React.FC<ModalProps> = React.memo(
     const onChangeJob = (event: React.FormEvent<HTMLSelectElement>) => {
       event.preventDefault();
       selecteSort.current = event.currentTarget.value;
-      console.log(selecteSort.current);
     };
 
     const onClickCountryBtn = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       selecteCountry.current = event.currentTarget.innerText;
-      console.log(event.currentTarget.innerText);
     };
 
     const onClickLocationBtn = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       selecteLocations.current = event.currentTarget.innerText;
-      console.log(selecteLocations.current);
     };
 
     const onChangeYears = (event: React.FormEvent<HTMLSelectElement>) => {
       event.preventDefault();
-
       selecteYear.current = event.currentTarget.value;
-      console.log(selecteYear.current);
     };
+
+    const onClickSubmitBtn = useCallback(
+      (event: React.MouseEvent<HTMLButtonElement>) => {
+        //event.preventDefault();
+        // setUrl(
+        //   `/api/v4/jobs?country=kr&job_sort=job.latest_order&years=-1&locations=all`
+        // );
+        // props.history.push(
+        //   `?country=kr&job_sort=job.latest_order&years=-1&locations=all`
+        // );
+      },
+      []
+    );
 
     return (
       <Container>
@@ -390,8 +396,6 @@ const Modal: React.FC<ModalProps> = React.memo(
                   <BtnH6>국가</BtnH6>
                   <BtnDiv>
                     {countries.map(({ key, display }) => {
-                      console.log(country.key === key);
-                      console.log(key);
                       return (
                         <CountryBtn
                           key={key}
@@ -408,11 +412,11 @@ const Modal: React.FC<ModalProps> = React.memo(
                 <Locations>
                   <BtnH6>지역</BtnH6>
                   <BtnDiv>
-                    {locationsData.current.map(({ display, key }: any) => {
+                    {locationsData.current.map(({ key, display }: any) => {
                       return (
                         <LocationBtn
                           key={key}
-                          isActive={location.key === key}
+                          isActive={locations.key === key}
                           onClick={onClickLocationBtn}
                         >
                           {display}
@@ -442,9 +446,9 @@ const Modal: React.FC<ModalProps> = React.memo(
               </Filters>
             </FilterBox>
             <BtnBox>
-              <button type="submit" onClick={onClickSubmitBtn}>
+              <SubmitBtn type="submit" onClick={onClickSubmitBtn}>
                 적용
-              </button>
+              </SubmitBtn>
             </BtnBox>
           </Box>
         </Contant>
@@ -454,4 +458,4 @@ const Modal: React.FC<ModalProps> = React.memo(
   }
 );
 
-export default Modal;
+export default withRouter(Modal);

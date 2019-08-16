@@ -3,31 +3,17 @@ import MainPresenter from "./MainPresenter";
 import axios from "axios";
 import Loader from "../../components/Loader";
 import Error from "../../components/Error";
+import { MainCotainerProps } from "../../types/local";
 
 const initialState = {
   isLoading: true,
   isError: false,
-  sort: {
-    selected: true,
-    display: "최신순",
-    key: "job.latest_order"
-  },
-  country: {
-    selected: true,
-    display: "한국",
-    key: "kr"
-  },
-  location: {
-    selected: false,
-    display: "전국",
-    key: "all"
-  },
-  year: {
-    selected: false,
-    display: "전체",
-    key: "-1"
-  },
-  filterCnt: 2,
+  filter: [],
+  sort: { selected: false, display: "", key: "" },
+  country: { selected: false, display: "", key: "" },
+  location: { selected: false, display: "", key: "" },
+  year: { selected: false, display: "", key: "" },
+  filterCnt: 0,
   jobs: null,
   nextUrl: null
 };
@@ -37,12 +23,23 @@ export const GET_JOBS = "GET_JOBS";
 export const API_FAILURE = "API_FAILURE";
 
 const reducer = (state: any, action: any) => {
-  console.log("리듀서");
   switch (action.type) {
     case GET_FILTERS:
+      let count = 0;
+
+      if (action.sort.selected) count++;
+      if (action.country.selected) count++;
+      if (action.location.selected) count++;
+      if (action.year.selected) count++;
+
       return {
         ...state,
-        filters: action.filters
+        filters: action.filters,
+        sort: action.sort,
+        country: action.country,
+        location: action.location,
+        year: action.year,
+        filterCnt: count
       };
     case GET_JOBS:
       return {
@@ -58,8 +55,7 @@ const reducer = (state: any, action: any) => {
   }
 };
 
-const MainContainer: React.FC = () => {
-  console.log("메인");
+const MainContainer: React.FC<MainCotainerProps> = props => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const {
     isLoading,
@@ -73,64 +69,92 @@ const MainContainer: React.FC = () => {
     jobs,
     nextUrl
   } = state;
+  const params = new URLSearchParams(props.location.search);
   const [url, setUrl] = useState(
-    "/api/v4/jobs?country=kr&job_sort=job.latest_order&years=-1&locations=all"
+    `/api/v4/jobs?country=${params.get("country")}&job_sort=${params.get(
+      "job_sort"
+    )}&years=${params.get("years")}&locations=${params.get("locations")}`
   );
   const [showModal, setShowModal] = useState(false);
 
   // 필터 데이터 가져오기
-  useEffect(() => {
-    console.log("필터데이터");
-    const getData = async () => {
-      try {
-        const { data: filtersData } = await axios.get("/api/v4/filters", {
-          headers: {
-            "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7"
-          }
-        });
-        dispatch({
-          type: GET_FILTERS,
-          filters: filtersData
-        });
-      } catch (error) {
-        dispatch({ type: API_FAILURE });
-      }
-    };
-    getData();
-  }, []);
+  const getFilters = async (
+    country: string | null,
+    sort: string | null,
+    year: string | null,
+    location: string | null
+  ) => {
+    try {
+      const { data: filtersData } = await axios.get("/api/v4/filters", {
+        headers: {
+          "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7"
+        }
+      });
+
+      dispatch({
+        type: GET_FILTERS,
+        filters: filtersData,
+        sort: filtersData.job_sort.find((item: any) => item.key === sort),
+        country: filtersData.countries.find(
+          (item: any) => item.key === country
+        ),
+        location: filtersData.countries
+          .find((item: any) => item.key === country)
+          ["locations"].find((item: any) => item.key === location),
+        year: filtersData.years.find((item: any) => item.key === year)
+      });
+    } catch (error) {
+      dispatch({ type: API_FAILURE });
+    }
+  };
 
   // 잡 데이터 가져오기
-  useEffect(() => {
-    console.log("데이터");
-    if (url) {
-      const fetchData = async () => {
-        try {
-          const {
-            data: {
-              data: jobsData,
-              links: { next }
-            }
-          } = await axios.get(url, {
-            headers: {
-              "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7"
-            }
-          });
-          dispatch({
-            type: GET_JOBS,
-            jobs: jobsData,
-            nextUrl: next
-          });
-        } catch (error) {
-          dispatch({ type: API_FAILURE });
+  const getJobs = async () => {
+    try {
+      const {
+        data: {
+          data: jobsData,
+          links: { next }
         }
-      };
-      fetchData();
+      } = await axios.get(url, {
+        headers: {
+          "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7"
+        }
+      });
+      dispatch({
+        type: GET_JOBS,
+        jobs: jobsData,
+        nextUrl: next
+      });
+    } catch (error) {
+      dispatch({ type: API_FAILURE });
     }
-  }, [url]);
+  };
+
+  useEffect(() => {
+    // URL에 필터 조건이 없을 경우
+    if (!props.location.search) {
+      setUrl(
+        `/api/v4/jobs?country=kr&job_sort=job.latest_order&years=-1&locations=all`
+      );
+      props.history.push(
+        `?country=kr&job_sort=job.latest_order&years=-1&locations=all`
+      );
+      // 필터 데이터가 없을 경우
+    } else if (!state.filters) {
+      getFilters(
+        params.get("country"),
+        params.get("job_sort"),
+        params.get("years"),
+        params.get("locations")
+      );
+    } else {
+      getJobs();
+    }
+  }, [url, props.location.search, state.filters]);
 
   // Infinite Scroll 함수
   const onScroll = useCallback(() => {
-    console.log("스크롤함수");
     if (
       window.scrollY + document.documentElement.clientHeight >
       document.documentElement.scrollHeight - 300
@@ -141,7 +165,6 @@ const MainContainer: React.FC = () => {
 
   // 스크롤 이벤트
   useEffect(() => {
-    console.log("스크롤이벤트");
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
@@ -154,18 +177,9 @@ const MainContainer: React.FC = () => {
   // useCallback 사용하여 함수가 계속 생성되는 것 방지
   const onClickFilter = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
-      console.log("클릭이벤트");
       setShowModal(showModal ? false : true);
     },
     [showModal]
-  );
-
-  const onClickSubmitBtn = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      event.preventDefault();
-      console.log("클릭");
-    },
-    []
   );
 
   return isLoading ? (
@@ -183,7 +197,6 @@ const MainContainer: React.FC = () => {
       filters={filters}
       showModal={showModal}
       onClickFilter={onClickFilter}
-      onClickSubmitBtn={onClickSubmitBtn}
     />
   );
 };
