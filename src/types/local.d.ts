@@ -18,8 +18,13 @@ export interface MainPresenterProps {
     years: [{ selected: boolean; display: string; key: string }];
   } | null;
   sort: { selected: boolean; display: string; key: string };
-  country: { selected: boolean; display: string; key: string };
-  location: { selected: boolean; display: string; key: string };
+  country: {
+    selected: boolean;
+    display: string;
+    key: string;
+    locations: [{ selected: boolean; display: string; key: string }];
+  };
+  locations: [{ selected: boolean; display: string; key: string }];
   year: { selected: boolean; display: string; key: string };
   filterCnt: number;
   jobs: [
@@ -44,7 +49,10 @@ export interface MainPresenterProps {
     }
   ];
   showModal: boolean;
+  setShowModal: React.Dispatch<React.SetStateAction>;
   onClickFilter: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  setUrl: React.Dispatch<React.SetStateAction>;
+  setIsFetch: React.MutableRefObject<boolean>;
 }
 
 export interface LoaderImgProps {
@@ -84,12 +92,19 @@ export interface ModalProps {
     years: [{ selected: boolean; display: string; key: string }];
   };
   sort: { selected: boolean; display: string; key: string };
-  country: { selected: boolean; display: string; key: string };
-  locations: { selected: boolean; display: string; key: string };
+  country: {
+    selected: boolean;
+    display: string;
+    key: string;
+    locations: [{ selected: boolean; display: string; key: string }];
+  };
+  locations: [{ selected: boolean; display: string; key: string }];
   year: { selected: boolean; display: string; key: string };
   onClickFilter: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  setUrl: React.Dispatch<React.SetStateAction>;
+  setShowModal: React.Dispatch<React.SetStateAction>;
+  setIsFetch: React.MutableRefObject<boolean>;
   history: RouteComponentProps["history"];
-  location: RouteComponentProps["location"];
 }
 
 export interface ActiveProps {

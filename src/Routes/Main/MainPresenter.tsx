@@ -412,12 +412,15 @@ const MainPresenter: React.FC<MainPresenterProps> = ({
   filters,
   sort,
   country,
-  location,
+  locations,
   year,
   filterCnt,
   jobs,
   showModal,
-  onClickFilter
+  setShowModal,
+  onClickFilter,
+  setUrl,
+  setIsFetch
 }) => (
   <Container>
     <Helmet>
@@ -431,17 +434,19 @@ const MainPresenter: React.FC<MainPresenterProps> = ({
               {[
                 { category: null, val: sort },
                 { category: "국가", val: country },
-                { category: "지역", val: location },
+                { category: "지역", val: locations[0] },
                 { category: "경력", val: year }
-              ].map(({ category, val: { selected, display } }) => (
-                <Filter
-                  key={category + display}
-                  category={category}
-                  display={display}
-                  selected={selected}
-                  onClickFilter={onClickFilter}
-                />
-              ))}
+              ].map(({ category, val }) =>
+                val ? (
+                  <Filter
+                    key={category + val.display}
+                    category={category}
+                    display={val.display}
+                    selected={val.selected}
+                    onClickFilter={onClickFilter}
+                  />
+                ) : null
+              )}
             </WebFiltersBtns>
             <MobileFilter>
               {"적용 중 필터:"}
@@ -464,9 +469,12 @@ const MainPresenter: React.FC<MainPresenterProps> = ({
             filters={filters}
             sort={sort}
             country={country}
-            locations={location}
+            locations={locations}
             year={year}
             onClickFilter={onClickFilter}
+            setUrl={setUrl}
+            setShowModal={setShowModal}
+            setIsFetch={setIsFetch}
           />
         ) : null}
         <H3Text>적극 채용중인 회사</H3Text>

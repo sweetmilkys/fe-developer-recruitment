@@ -1,7 +1,8 @@
-import React, { useRef, memo, useCallback } from "react";
+import React, { useState, useRef, memo, useCallback } from "react";
 import styled from "styled-components";
 import { ModalProps, ActiveProps } from "../types/local";
 import { withRouter, RouteComponentProps } from "react-router-dom";
+import {} from "../routes/Main/MainContainer";
 
 const Container = styled.div`
   top: 0;
@@ -142,36 +143,25 @@ const Sort = styled.div`
   }
 `;
 
-const Countries = styled.div`
+const SelectBtnBox = styled.div`
   margin: 10px 0 20px;
 
   :last-child {
     margin-bottom: 10px;
   }
-`;
 
-const CountryBtn = styled.button<ActiveProps>`
-  color: ${props =>
-    props.isActive ? props.theme.whiteColor : props.theme.blackColor};
-  background: ${props => (props.isActive ? props.theme.mainColor : "#f8f8fa")};
-  border-color: ${props =>
-    props.isActive ? props.theme.mainColor : props.theme.blackColor};
-`;
-
-const Locations = styled.div`
-  margin: 10px 0 20px;
-
-  :last-child {
-    margin-bottom: 10px;
+  button {
+    background: #f8f8fa;
   }
 `;
 
-const LocationBtn = styled.button<ActiveProps>`
+const SelectBtn = styled.button<ActiveProps>`
   color: ${props =>
     props.isActive ? props.theme.whiteColor : props.theme.blackColor};
-  background: ${props => (props.isActive ? props.theme.mainColor : "#f8f8fa")};
+  background: ${props =>
+    props.isActive ? props.theme.mainColor : "#f8f8fa"}!important;
   border-color: ${props =>
-    props.isActive ? props.theme.mainColor : props.theme.blackColor};
+    props.isActive ? `${props.theme.mainColor} !important` : null};
 `;
 
 const Years = styled.div`
@@ -316,50 +306,110 @@ const Modal: React.FC<ModalProps & RouteComponentProps> = memo(
     locations,
     year,
     onClickFilter,
-    history,
-    location
+    setUrl,
+    setShowModal,
+    setIsFetch,
+    history
   }) => {
-    const locationsData: any = useRef();
+    const [locationsData, setLocationsData] = useState(country.locations);
+    const [selecteCountry, setSelecteCountry] = useState(country.key);
+    const [selecteLocation, setSelecteLocation] = useState(
+      locations.map(({ key }) => key)
+    );
     const selecteSort = useRef(sort.key);
-    const selecteCountry = useRef(country.display);
-    const selecteLocations = useRef(locations.display);
+    const sendCountry = useRef(country.key);
+    const sendLocations = useRef(locations.map(({ key }) => key));
     const selecteYear = useRef(year.key);
 
-    countries.forEach(({ key, locations }) => {
-      if (country.key === key) locationsData.current = locations;
-    });
-
-    const onChangeJob = (event: React.FormEvent<HTMLSelectElement>) => {
-      event.preventDefault();
-      selecteSort.current = event.currentTarget.value;
+    const onClickInit = (event: React.MouseEvent<HTMLButtonElement>) => {
+      setLocationsData(country.locations);
+      selecteSort.current = sort.key;
+      setSelecteCountry(country.display);
+      setSelecteLocation(locations.map(({ key }) => key));
+      selecteYear.current = year.key;
     };
 
-    const onClickCountryBtn = (event: React.MouseEvent<HTMLButtonElement>) => {
-      event.preventDefault();
-      selecteCountry.current = event.currentTarget.innerText;
-    };
+    const onChangeJob = useCallback(
+      (event: React.FormEvent<HTMLSelectElement>) => {
+        const selectItem = event.currentTarget.value;
+        selecteSort.current = selectItem;
+      },
+      []
+    );
 
-    const onClickLocationBtn = (event: React.MouseEvent<HTMLButtonElement>) => {
-      event.preventDefault();
-      selecteLocations.current = event.currentTarget.innerText;
-    };
+    const onClickCountryBtn = useCallback(
+      (event: React.MouseEvent<HTMLButtonElement>) => {
+        const { key, locations: locations2 } = countries[
+          countries.findIndex(item => {
+            return event.currentTarget.innerText === item.display;
+          })
+        ];
 
-    const onChangeYears = (event: React.FormEvent<HTMLSelectElement>) => {
-      event.preventDefault();
-      selecteYear.current = event.currentTarget.value;
-    };
+        setSelecteCountry(key);
+        sendCountry.current = key;
+        sendLocations.current = locations2[
+          locations2.findIndex(({ selected }) => selected === true)
+        ]
+          ? [
+              locations2[
+                locations2.findIndex(({ selected }) => selected === true)
+              ].key
+            ]
+          : [];
+        setLocationsData(locations2);
+      },
+      [countries]
+    );
+
+    const onClickLocationBtn = useCallback(
+      (event: React.MouseEvent<HTMLButtonElement>) => {
+        const selectItem =
+          locationsData[
+            locationsData.findIndex(item => {
+              return event.currentTarget.innerText === item.display;
+            })
+          ];
+        setSelecteLocation(prev => {
+          sendLocations.current = prev.includes(selectItem.key)
+            ? [...prev.filter(location => !location.includes(selectItem.key))]
+            : [
+                ...prev.filter(location => !location.includes(selectItem.key)),
+                selectItem.key
+              ];
+          return sendLocations.current;
+        });
+      },
+      [locationsData]
+    );
+
+    const onChangeYears = useCallback(
+      (event: React.FormEvent<HTMLSelectElement>) => {
+        const selectItem = event.currentTarget.value;
+        selecteYear.current = selectItem;
+      },
+      []
+    );
 
     const onClickSubmitBtn = useCallback(
       (event: React.MouseEvent<HTMLButtonElement>) => {
-        //event.preventDefault();
-        // setUrl(
-        //   `/api/v4/jobs?country=kr&job_sort=job.latest_order&years=-1&locations=all`
-        // );
-        // props.history.push(
-        //   `?country=kr&job_sort=job.latest_order&years=-1&locations=all`
-        // );
+        setShowModal(false);
+        setIsFetch.current = false;
+        setUrl(
+          `/api/v4/jobs?country=${sendCountry.current}&job_sort=${
+            selecteSort.current
+          }&years=${selecteYear.current}${sendLocations.current
+            .map(item => `&locations=${item}`)
+            .join("")}`
+        );
+        history.push(
+          `?country=${sendCountry.current}&job_sort=${
+            selecteSort.current
+          }&years=${selecteYear.current}${sendLocations.current
+            .map(item => `&locations=${item}`)
+            .join("")}`
+        );
       },
-      []
+      [history, setUrl, setShowModal, setIsFetch]
     );
 
     return (
@@ -367,7 +417,7 @@ const Modal: React.FC<ModalProps & RouteComponentProps> = memo(
         <Contant>
           <Box>
             <HeaderBox>
-              <InitBtn>
+              <InitBtn onClick={onClickInit}>
                 <i className="fas fa-undo-alt" />
                 초기화
               </InitBtn>
@@ -392,39 +442,40 @@ const Modal: React.FC<ModalProps & RouteComponentProps> = memo(
                     </select>
                   </SelectDiv>
                 </Sort>
-                <Countries>
+                <SelectBtnBox>
                   <BtnH6>국가</BtnH6>
                   <BtnDiv>
                     {countries.map(({ key, display }) => {
                       return (
-                        <CountryBtn
+                        <SelectBtn
                           key={key}
                           type="button"
-                          isActive={country.key === key}
+                          isActive={selecteCountry === key}
                           onClick={onClickCountryBtn}
                         >
                           {display}
-                        </CountryBtn>
+                        </SelectBtn>
                       );
                     })}
                   </BtnDiv>
-                </Countries>
-                <Locations>
+                </SelectBtnBox>
+                <SelectBtnBox>
                   <BtnH6>지역</BtnH6>
                   <BtnDiv>
-                    {locationsData.current.map(({ key, display }: any) => {
+                    {locationsData.map(({ key, display }: any) => {
                       return (
-                        <LocationBtn
-                          key={key}
-                          isActive={locations.key === key}
+                        <SelectBtn
+                          key={key + display}
+                          type="button"
+                          isActive={selecteLocation.includes(key)}
                           onClick={onClickLocationBtn}
                         >
                           {display}
-                        </LocationBtn>
+                        </SelectBtn>
                       );
                     })}
                   </BtnDiv>
-                </Locations>
+                </SelectBtnBox>
                 <Years>
                   <SelectH6>경력</SelectH6>
                   <SelectDiv>
