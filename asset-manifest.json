@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.js": "/fe-developer-recruitment/static/js/main.447edb96.chunk.js",
+    "main.js.map": "/fe-developer-recruitment/static/js/main.447edb96.chunk.js.map",
+    "runtime~main.js": "/fe-developer-recruitment/static/js/runtime~main.9b92006e.js",
+    "runtime~main.js.map": "/fe-developer-recruitment/static/js/runtime~main.9b92006e.js.map",
+    "static/js/2.142a7909.chunk.js": "/fe-developer-recruitment/static/js/2.142a7909.chunk.js",
+    "static/js/2.142a7909.chunk.js.map": "/fe-developer-recruitment/static/js/2.142a7909.chunk.js.map",
+    "index.html": "/fe-developer-recruitment/index.html",
+    "precache-manifest.b6ed95231ecfa1e75a9aa08b07838f58.js": "/fe-developer-recruitment/precache-manifest.b6ed95231ecfa1e75a9aa08b07838f58.js",
+    "service-worker.js": "/fe-developer-recruitment/service-worker.js",
+    "static/media/0_4.f4c95760.png": "/fe-developer-recruitment/static/media/0_4.f4c95760.efc287e3.png",
+    "static/media/4qrmtohvtuusxbj6__1080_790.jpg": "/fe-developer-recruitment/static/media/4qrmtohvtuusxbj6__1080_790.128985ec.jpg",
+    "static/media/bx7zxeirqqeboq0q__1080_790.jpg": "/fe-developer-recruitment/static/media/bx7zxeirqqeboq0q__1080_790.15d52bdf.jpg",
+    "static/media/ftu1mpsatoohubhp__1080_790.jpg": "/fe-developer-recruitment/static/media/ftu1mpsatoohubhp__1080_790.4f1eb728.jpg",
+    "static/media/ishd31cajhqb4f8w__1080_790.jpg": "/fe-developer-recruitment/static/media/ishd31cajhqb4f8w__1080_790.b80683a8.jpg",
+    "static/media/lighthouse.png": "/fe-developer-recruitment/static/media/lighthouse.64af4a9f.png",
+    "static/media/qpja7torlddo7ymw__1080_790.jpg": "/fe-developer-recruitment/static/media/qpja7torlddo7ymw__1080_790.760cde0c.jpg"
+  }
+}
