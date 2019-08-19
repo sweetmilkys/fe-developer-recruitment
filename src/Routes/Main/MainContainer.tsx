@@ -156,7 +156,7 @@ const MainContainer: React.FC<MainCotainerProps> = ({
           });
         } else {
           // 조건에 해당하는 API데이터가 없을 경우
-          alert("해당 조건을 만족하는 데이터가 없습니다.");
+          //alert("해당 조건을 만족하는 데이터가 없습니다.");
           history.push("/wdlist/518/669");
         }
       } catch (error) {
@@ -166,13 +166,34 @@ const MainContainer: React.FC<MainCotainerProps> = ({
 
     // URL에 필터 조건이 없을 경우
     if (!search) {
+      const storageFilter = JSON.parse(localStorage.getItem("filter")!);
+
+      // localstorage에 저장된 필터 값이 있을 경우 해당 값 적용 아니면 초기값 적용
       setUrl(
-        `/api/v4/jobs?country=kr&job_sort=job.latest_order&years=-1&locations=all`
+        `/api/v4/jobs?country=${
+          storageFilter ? storageFilter.country : "kr"
+        }&job_sort=${
+          storageFilter ? storageFilter.sort : "job.latest_order"
+        }&years=${storageFilter ? storageFilter.year : "-1"}${
+          storageFilter
+            ? storageFilter.locations
+                .map((item: any) => `&locations=${item}`)
+                .join("")
+            : "&locations=all"
+        }`
       );
       history.push(
-        `?country=kr&job_sort=job.latest_order&years=-1&locations=all`
+        `?country=${storageFilter ? storageFilter.country : "kr"}&job_sort=${
+          storageFilter ? storageFilter.sort : "job.latest_order"
+        }&years=${storageFilter ? storageFilter.year : "-1"}${
+          storageFilter
+            ? storageFilter.locations
+                .map((item: any) => `&locations=${item}`)
+                .join("")
+            : "&locations=all"
+        }`
       );
-      //   // 필터 데이터가 없을 경우
+      // 필터 데이터가 없을 경우
     } else if (!filters) {
       getFilters();
     } else {
@@ -194,6 +215,8 @@ const MainContainer: React.FC<MainCotainerProps> = ({
       if (nextUrl !== null) {
         setUrl(nextUrl);
         isFetch.current = true;
+      } else {
+        alert("마지막 페이지 입니다 :)");
       }
     }
   }, [nextUrl]);
@@ -209,7 +232,7 @@ const MainContainer: React.FC<MainCotainerProps> = ({
     };
   }, [onScroll]);
 
-  // useCallback 사용하여 함수가 계속 생성되는 것 방지
+  // useCallback 사용하여 함수 반복 생성 방지
   const onClickFilter = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       setShowModal(showModal ? false : true);

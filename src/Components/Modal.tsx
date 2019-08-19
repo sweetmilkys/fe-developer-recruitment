@@ -316,27 +316,30 @@ const Modal: React.FC<ModalProps & RouteComponentProps> = memo(
     const [selecteLocation, setSelecteLocation] = useState(
       locations.map(({ key }) => key)
     );
-    const selecteSort = useRef(sort.key);
+    const sendSort = useRef(sort.key);
     const sendCountry = useRef(country.key);
     const sendLocations = useRef(locations.map(({ key }) => key));
-    const selecteYear = useRef(year.key);
+    const sendYear = useRef(year.key);
 
+    // 초기화 button 이벤트
     const onClickInit = (event: React.MouseEvent<HTMLButtonElement>) => {
       setLocationsData(country.locations);
-      selecteSort.current = sort.key;
+      sendSort.current = sort.key;
       setSelecteCountry(country.display);
       setSelecteLocation(locations.map(({ key }) => key));
-      selecteYear.current = year.key;
+      sendYear.current = year.key;
     };
 
+    // 종류 select 이벤트
     const onChangeJob = useCallback(
       (event: React.FormEvent<HTMLSelectElement>) => {
         const selectItem = event.currentTarget.value;
-        selecteSort.current = selectItem;
+        sendSort.current = selectItem;
       },
       []
     );
 
+    // 국가 button 이벤트
     const onClickCountryBtn = useCallback(
       (event: React.MouseEvent<HTMLButtonElement>) => {
         const { key, locations: locations2 } = countries[
@@ -361,6 +364,7 @@ const Modal: React.FC<ModalProps & RouteComponentProps> = memo(
       [countries]
     );
 
+    // 지역 button 이벤트
     const onClickLocationBtn = useCallback(
       (event: React.MouseEvent<HTMLButtonElement>) => {
         const selectItem =
@@ -370,43 +374,64 @@ const Modal: React.FC<ModalProps & RouteComponentProps> = memo(
             })
           ];
         setSelecteLocation(prev => {
-          sendLocations.current = prev.includes(selectItem.key)
-            ? [...prev.filter(location => !location.includes(selectItem.key))]
-            : [
-                ...prev.filter(location => !location.includes(selectItem.key)),
-                selectItem.key
-              ];
+          // 조회한 국가와 선택한 국가가 같을 경우 이전 지역과 같이 저장
+          if (country.key === sendCountry.current) {
+            sendLocations.current = prev.includes(selectItem.key)
+              ? [...prev.filter(location => !location.includes(selectItem.key))]
+              : [
+                  ...prev.filter(
+                    location => !location.includes(selectItem.key)
+                  ),
+                  selectItem.key
+                ];
+          } else {
+            sendLocations.current = [selectItem.key];
+          }
+
           return sendLocations.current;
         });
       },
       [locationsData]
     );
 
+    // 경력 select 이벤트
     const onChangeYears = useCallback(
       (event: React.FormEvent<HTMLSelectElement>) => {
         const selectItem = event.currentTarget.value;
-        selecteYear.current = selectItem;
+        sendYear.current = selectItem;
       },
       []
     );
 
+    // 적용버튼 클릭 이벤트
     const onClickSubmitBtn = useCallback(
       (event: React.MouseEvent<HTMLButtonElement>) => {
+        const isSave: any = document.getElementById("save");
         setShowModal(false);
         setIsFetch.current = false;
+        // 적용된 필터 저장유지 할 경우 localstorage에 저장
+        if (isSave.selected) {
+          localStorage.setItem(
+            "filter",
+            JSON.stringify({
+              sort: sendSort.current,
+              country: sendCountry.current,
+              locations: sendLocations.current,
+              year: sendYear.current
+            })
+          );
+        }
         setUrl(
           `/api/v4/jobs?country=${sendCountry.current}&job_sort=${
-            selecteSort.current
-          }&years=${selecteYear.current}${sendLocations.current
+            sendSort.current
+          }&years=${sendYear.current}${sendLocations.current
             .map(item => `&locations=${item}`)
             .join("")}`
         );
         history.push(
-          `?country=${sendCountry.current}&job_sort=${
-            selecteSort.current
-          }&years=${selecteYear.current}${sendLocations.current
-            .map(item => `&locations=${item}`)
-            .join("")}`
+          `?country=${sendCountry.current}&job_sort=${sendSort.current}&years=${
+            sendYear.current
+          }${sendLocations.current.map(item => `&locations=${item}`).join("")}`
         );
       },
       [history, setUrl, setShowModal, setIsFetch]
@@ -491,7 +516,7 @@ const Modal: React.FC<ModalProps & RouteComponentProps> = memo(
                   </SelectDiv>
                 </Years>
                 <State>
-                  <input type="checkbox" />
+                  <input id="save" type="checkbox" />
                   적용된 필터를 저장하고 유지합니다.
                 </State>
               </Filters>
